@@ -11,12 +11,14 @@ def get_mask_account_card(number: str) -> str:
         result = f"{number[:-20]}{new_number}"
     return result
 
+
 if __name__ == '__main__':
     print(get_mask_account_card('Счет 12345678901234567890'))
     print(get_mask_account_card('Visa Classic 1234567890123456'))
     # должно вывестись в терминал
     # Счет **7890
     # Visa Classic 1234 56** **** 3456
+
 
 def get_new_data(old_data: str) -> str:
     """ Функция принимает строку с датой и
