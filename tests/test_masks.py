@@ -1,37 +1,33 @@
 import pytest
-from src.widget import get_mask_account, get_new_data
+from src.masks import get_mask_card, get_mask_account
 
 
 @pytest.mark.parametrize(
-    "account_card, mask",
+    "num_card, expected",
     [
-        ("Maestro 1596837868705199", "Maestro 1596 83** **** 5199"),
-        ("Счет 64686473678894779589", "Счет **9589"),
-        ("MasterCard 7158300734726758", "MasterCard 7158 30** **** 6758"),
-        ("Счет 35383033474447895560", "Счет **5560"),
-        ("Visa Classic 6831982476737658", "Visa Classic 6831 98** **** 7658"),
-        ("Visa Platinum 8990922113665229", "Visa Platinum 8990 92** **** 5229"),
-        ("Visa Gold 5999414228426353", "Visa Gold 5999 41** **** 6353"),
-        ("Счет 73654108430135874305", "Счет **4305"),
+        ("7000792289606361", "7000 79** **** 6361"),
+        (
+            "700079228960636",
+            "Введено меньше цифр чем на самой карте или совсем пусто!!!",
+        ),
+        ("aa000s289606361b", "Опечатка, Вы ввели буквы в место цифры!!!"),
+        ("70007922896063612", "Введено больше цифр чем на самой карте!!!"),
+        ("", "Введено меньше цифр чем на самой карте или совсем пусто!!!"),
     ],
 )
-def test_mask_account_card(account_card, mask):
-    assert get_mask_account(account_card) == mask
+def test_get_mask_card_number(num_card, expected):
+    assert get_mask_card(num_card) == expected
 
 
 @pytest.mark.parametrize(
-    "data, expected",
+    "num_account, expected_acc",
     [
-        ("2018-07-11T02:26:18.671407", "11.07.2018"),
-        ("2018-10-14T08:21:33.419441", "14.10.2018"),
-        ("2018-09-12T21:27:25.241689", "12.09.2018"),
-        ("2018-06-30T02:08:58.425572", "30.06.2018"),
-        ("2019-07-03T18:35:29.5123", "03.07.2019"),
+        ("73654108430135874305", "**4305"),
+        ("7365410843013587", "Вы ввели меньше цифр!!!"),
+        ("7365dfc8430ghj874305", "Опечатка, Вы ввели буквы в место цифры!!!"),
+        ("736541084301358743050", "Вы ввели больше цифр!!!"),
+        ("", "Вы ввели меньше цифр!!!"),
     ],
 )
-def test_get_date(data, expected):
-    assert get_new_data(data) == expected
-
-
-def test_get_data_empty():
-    assert get_new_data("") == ""
+def test_get_mask_account(num_account, expected_acc):
+    assert get_mask_account(num_account) == expected_acc
