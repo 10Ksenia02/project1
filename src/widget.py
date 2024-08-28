@@ -1,6 +1,6 @@
 from src.masks import get_mask_account, get_mask_card
 
-def get_mask_account_card(number: str) -> str:
+def get_mask_account(number: str) -> str:
     """ Функция получает строку и маскирует счет/карту """
     if len(number.split()[-1]) == 16:
         new_number = get_mask_card(number.split()[-1])
@@ -13,8 +13,8 @@ def get_mask_account_card(number: str) -> str:
 
 
 if __name__ == '__main__':
-    print(get_mask_account_card('Счет 12345678901234567890'))
-    print(get_mask_account_card('Visa Classic 1234567890123456'))
+    print(get_mask_account('Счет 12345678901234567890'))
+    print(get_mask_account('Visa Classic 1234567890123456'))
     # должно вывестись в терминал
     # Счет **7890
     # Visa Classic 1234 56** **** 3456
