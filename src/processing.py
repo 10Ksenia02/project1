@@ -2,11 +2,12 @@
 
 
 def filter_by_state(new_list: list, state="EXECUTED") -> list:
+    result = []
     for new_lists in new_list:
         for i, v in new_lists.items():
             if v == state:
                 result.append(new_lists)
-        return result
+    return result
 
 
 def sort_by_date(new_list: list, old_data=True):

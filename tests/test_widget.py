@@ -1,5 +1,5 @@
 import pytest
-from src.widget import get_mask_account, get_new_data
+from src.widget import get_mask, get_new_data
 
 
 @pytest.mark.parametrize(
@@ -16,7 +16,7 @@ from src.widget import get_mask_account, get_new_data
     ],
 )
 def test_mask_account_card(account_card, mask):
-    assert get_mask_account(account_card) == mask
+    assert get_mask(account_card) == mask
 
 
 @pytest.mark.parametrize(
