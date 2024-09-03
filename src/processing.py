@@ -1,12 +1,15 @@
+from typing import Any
+
 # '''Функция которая принимает список словарей'''
 
 
-def filter_by_state(new_list: list, state="EXECUTED") -> list:
-    for new_lists in new_list:
-        for i, v in new_lists.items():
-            if v == state:
-                result.append(new_lists)
-        return result
+def filter_by_state(new_list, state="EXECUTED"):
+
+    result = []
+    for key in new_list:
+        if key.get('state') == state:
+            result.append(key)
+    return result
 
 
 def sort_by_date(new_list: list, old_data=True):
