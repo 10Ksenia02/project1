@@ -1,8 +1,8 @@
 from typing import Any
 
-import requests
 import os
 from dotenv import load_dotenv
+import requests
 
 
 load_dotenv()
@@ -13,10 +13,10 @@ values = os.getenv("PASSWORD")
 
 def currency_conversion(transaction: Any) -> Any:
     """Функция конвертации"""
-    amout = transaction["operationAmount"]["amount"]
+    amount = transaction["operationAmount"]["amount"]
     code = transaction["operationAmount"]["currency"]["code"]
     to = "RUB"
-    url = f"https://api.apilayer.com/exchangerates_data/convert?to={to}&from={code}&amount={amout}"
+    url = f"https://api.apilayer.com/exchangerates_data/convert?to={to}&from={code}&amount={amount}"
     payload = {}
     response = requests.get(url, headers={"apikey": values}, data=payload)
     result = response.json()
