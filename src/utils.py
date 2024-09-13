@@ -7,7 +7,7 @@ from typing import Any
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
 # Создаем путь до файла логов относительно текущей директории
-rel_log_file_path = os.path.join(current_dir, "../logs/utils.log")
+rel_log_file_path = os.path.join(current_dir, "../src/utils.py")
 abs_log_file_path = os.path.abspath(rel_log_file_path)
 
 # Создаем путь до файла JSON относительно текущей директории

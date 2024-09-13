@@ -17,7 +17,7 @@ file_handler.setFormatter(file_formatter)
 logger.addHandler(file_handler)
 
 
-def get_mask_card(card_number: str) -> str:
+def get_mask_card_number(card_number: str) -> str:
     """Функция маскировки номера карты"""
 
     card_number_str = str(card_number)
@@ -30,7 +30,7 @@ def get_mask_card(card_number: str) -> str:
         return "Неверный формат банковской карты"
 
 
-print(get_mask_card("7000792289606361"))
+print(get_mask_card_number("7000792289606361"))
 
 
 def get_mask_account(acc_number: str) -> str:
