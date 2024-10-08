@@ -1,37 +1,17 @@
-from unittest.mock import patch
+import os
 
-import pytest
+from src.utils import get_transaction_amount, get_transactions_from_json
 
-from src.utils import get_transactions_dictionary
-
-
-@pytest.fixture
-def get_path():
-    return "../data/operations.json"
+PATH_1 = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "operations_.json")
+PATH_2 = "test_operations_.json"
 
 
-@pytest.fixture
-def get_wrong_path():
-    return "nothing"
+def test_get_transactions_from_json_empty_file():
+    assert get_transactions_from_json("") == []
+    assert get_transactions_from_json(PATH_1) == []
+    assert get_transactions_from_json(PATH_2) == []
 
 
-@pytest.fixture
-def get_bad_file():
-    return "../data/wrong_operations.json"
-
-
-@patch("builtins.open")  # подменяем функцию открытия файла
-def test_get_transactions_dictionary(open_mock):
-    open_mock.return_value.__enter__.return_value.read.return_value = (
-        '[{"name": "dict_for_test"}, {"name": ' '"one_more"}]'
-    )
-    assert get_transactions_dictionary("any_path_no_matter") == [{"name": "dict_for_test"}, {"name": "one_more"}]
-    open_mock.assert_called_once_with("any_path_no_matter", "r", encoding="utf-8")
-
-
-def test_get_transactions_dictionary_1(get_wrong_path):
-    assert get_transactions_dictionary(get_wrong_path) == []
-
-
-def test_get_transactions_dictionary_2(get_bad_file):
-    assert get_transactions_dictionary(get_bad_file) == []
+def test_get_transaction_amount(transaction_1, transaction_2):
+    assert get_transaction_amount(transaction_1) == 31957.58
+    assert get_transaction_amount(transaction_2) == 0.0

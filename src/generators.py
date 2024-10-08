@@ -64,7 +64,7 @@ transactions = [
 ]
 
 
-def filter_by_currency(transactions: list[Any], currency: str) -> Any:
+def filter_by_currency(transaction: list[Any], currency: str) -> Any:
     """Функция фильтрует банковские операции по указанной валюте"""
 
     for i in transactions:
@@ -80,7 +80,7 @@ if __name__ == "__main__":
         print(next(usd_transactions)["id"])
 
 
-def transaction_descriptions(transactions: list[Any]) -> Iterator[str]:
+def transaction_descriptions(transaction: list[Any]) -> Iterator[str]:
     """Функция возвращает описание каждой операции по очереди"""
 
     for i in transactions:

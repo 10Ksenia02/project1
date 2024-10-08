@@ -1,108 +1,51 @@
 import json
 import logging
-from typing import Any
-import csv
+import os
 
-import pandas as pd
+from src.external_api import get_currency_conversion_to_rubles
 
 logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s: %(filename)s: %(levelname)s: %(message)s",
-    filename="../logs/utils.log",
-    # filename="utils.log",
+    filename=os.path.join(os.path.dirname(os.path.dirname(__file__)), "logs", "utils.log"),
     filemode="w",
+    format="%(asctime)s: %(name)s: %(levelname)s: %(message)s",
+    level=logging.INFO,
 )
-auth_logger = logging.getLogger("app.auth")
-# logger = logging.getLogger(__name__)
-# file_handler = logging.FileHandler('utils.log')
-# logger.addHandler(file_handler)
-# logger.setLevel(logging.INFO)
+
+logger = logging.getLogger(__name__)
+
+PATH_TO_FILE = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "operations.json")
 
 
-def get_transactions_dictionary(path: str) -> dict | Any:
-    """Принимает путь до JSON-файла и возвращает список словарей с данными о финансовых транзакциях."""
+def get_transactions_from_json(path_to_file: str) -> list[dict]:
+    """Function get transactions from JSON file."""
+
+    logger.info(f"Запуск функции {get_transactions_from_json.__name__}.")
     try:
-        # with open(path, "r", "operations.json", encoding='utf-8') as operations:
-        with open(path, "r", encoding="utf-8") as operations:
-
-            try:
-                auth_logger.info("Информация по счету")
-                list_trans = json.load(operations)
-                return list_trans
-            except json.JSONDecodeError:
-                list_trans = []
-                auth_logger.info("Информация по счету не удачно")
-                return list_trans
-    except FileNotFoundError:
-        list_trans = []
-        auth_logger.info("Файл поврежден")
-        return list_trans
-        # говорит о возрощений пипа list
-
-
-def get_transactions_dictionary_csv(csv_path: str) -> list[dict]:
-    """Aункция пути до CSV-файла и возвращает список словарей с данными о финансовых транзакциях"""
-
-    transaction_list = []
-    try:
-        with open(csv_path, encoding="utf-8") as csv_file:
-            reader = csv.reader(csv_file, delimiter=";")
-            next(reader)
-            for row in reader:
-                if row:
-                    id_, state, date, amount, currency_name, currency_code, from_, to, description = row
-                    transaction_list.append(
-                        {
-                            "id": str(id_),
-                            "state": state,
-                            "date": date,
-                            "operationAmount": {
-                                "amount": str(amount),
-                                "currency": {"name": currency_name, "code": currency_code},
-                            },
-                            "description": description,
-                            "from": from_,
-                            "to": to,
-                        }
-                    )
-    except Exception:
+        with open(path_to_file, encoding="utf-8") as file:
+            data = json.load(file)
+        logger.info(f"Успешное завершение работы функции {get_transactions_from_json.__name__}")
+        return data
+    except Exception as e:
+        logger.error(f"Ошибка. {e}.")
         return []
-    return transaction_list
 
 
-def get_transactions_dictionary_excel(excel_path: str) -> list[dict]:
-    """FAункция пути до EXCEL-файла и возвращает список словарей с данными о финансовых транзакциях"""
+def get_transaction_amount(transaction: dict) -> float:
+    """Function get amount of transaction in Rubles."""
 
-    transaction_list = []
+    logger.info(f"Запуск функции {get_transaction_amount.__name__}.")
     try:
-        excel_data = pd.read_excel(excel_path)
-        len_, b = excel_data.shape
-        for i in range(len_):
-            if excel_data["id"][i]:
-                transaction_list.append(
-                    {
-                        "id": str(excel_data["id"][i]),
-                        "state": excel_data["state"][i],
-                        "date": excel_data["date"][i],
-                        "operationAmount": {
-                            "amount": str(excel_data["amount"][i]),
-                            "currency": {
-                                "name": excel_data["currency_name"][i],
-                                "code": excel_data["currency_code"][i],
-                            },
-                        },
-                        "description": excel_data["description"][i],
-                        "from": excel_data["from"][i],
-                        "to": excel_data["to"][i],
-                    }
-                )
-            else:
-                continue
-    except Exception:
-        return []
-    return transaction_list
-
-
-if __name__ == "__main__":
-    wine_reviews = pd.read_csv("transactions.csv")
-    excel_data = pd.read_excel("transactions_excel.xlsx")
+        if transaction["operationAmount"]["currency"]["code"] != "RUB":
+            logger.info(
+                f"Успешное завершение работы функции {get_transaction_amount.__name__}, "
+                f"обращение к функции {get_currency_conversion_to_rubles.__name__}."
+            )
+            return get_currency_conversion_to_rubles(
+                transaction["operationAmount"]["currency"]["code"], float(transaction["operationAmount"]["amount"])
+            )
+        else:
+            logger.info(f"Успешное завершение работы функции {get_transaction_amount.__name__}.")
+            return float(transaction["operationAmount"]["amount"])
+    except Exception as e:
+        logger.error(f"Ошибка. {e}.")
+        return 0.0

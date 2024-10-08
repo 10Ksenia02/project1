@@ -1,10 +1,12 @@
 import pytest
-from src.widget import get_mask, get_new_data
+
+from src.widget import get_date, mask_account_card
 
 
 @pytest.mark.parametrize(
-    "account_card, mask",
+    "input_data, expected",
     [
+        ("Visa Platinum 7000792289606361", "Visa Platinum 7000 79** **** 6361"),
         ("Maestro 1596837868705199", "Maestro 1596 83** **** 5199"),
         ("Счет 64686473678894779589", "Счет **9589"),
         ("MasterCard 7158300734726758", "MasterCard 7158 30** **** 6758"),
@@ -12,26 +14,33 @@ from src.widget import get_mask, get_new_data
         ("Visa Classic 6831982476737658", "Visa Classic 6831 98** **** 7658"),
         ("Visa Platinum 8990922113665229", "Visa Platinum 8990 92** **** 5229"),
         ("Visa Gold 5999414228426353", "Visa Gold 5999 41** **** 6353"),
-        ("Счет 73654108430135874305", "Счет **4305"),
     ],
 )
-def test_mask_account_card(account_card, mask):
-    assert get_mask(account_card) == mask
+def test_mask_account_card_base(input_data, expected):
+    assert mask_account_card(input_data) == expected
+
+
+def test_get_mask_account(no_number_5):
+    assert mask_account_card(no_number_5) == ""
+
+
+def test_mask_account_card_no_number():
+    assert mask_account_card("Visa 12345") == ""
+    assert mask_account_card("Счет 12345") == ""
+
+
+def test_get_date_base():
+    assert get_date("2024-03-11T02:26:18.671407") == "11.03.2024"
 
 
 @pytest.mark.parametrize(
-    "data, expected",
+    "input_data, expected",
     [
-        ("2018-07-11T02:26:18.671407", "11.07.2018"),
-        ("2018-10-14T08:21:33.419441", "14.10.2018"),
-        ("2018-09-12T21:27:25.241689", "12.09.2018"),
-        ("2018-06-30T02:08:58.425572", "30.06.2018"),
-        ("2019-07-03T18:35:29.5123", "03.07.2019"),
+        ("20240311T02:26:18.671407", ""),
+        ("1024-03-11T02:26:18.671407", ""),
+        ("2024-34-88T02:26:18.671407", ""),
+        ("abcd-03-11T02:26:18.671407", ""),
     ],
 )
-def test_get_date(data, expected):
-    assert get_new_data(data) == expected
-
-
-def test_get_data_empty():
-    assert get_new_data("") == ""
+def test_get_data_incorrect(input_data, expected):
+    assert get_date(input_data) == expected
