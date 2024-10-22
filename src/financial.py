@@ -59,7 +59,6 @@ def open_excel_data(file: str) -> list[dict]:
     return result
 
 
-if __name__ == '__main__':
-    open_csv_data('../data/transactions.csv')
+if __name__ == "__main__":
+    open_csv_data("../data/transactions.csv")
     open_excel_data("../data/transactions_excel.xlsx")
-    

@@ -1,34 +1,31 @@
 from src.masks import get_mask_account, get_mask_card
 
 
+def mask_account_card(input_data: str) -> str:
+    """Base masking function."""
+
+    # cards: list = ["visa", "maestro", "mastercard"]
+    data_list: list = input_data.split(" ")
+    # if data_list[0].lower() in cards and get_mask_card_number(data_list[-1]) != "":
+    if len(data_list[-1]) == 16:
+        return str(" ".join(data_list[:-1]) + " " + get_mask_card(data_list[-1]))
+    # elif data_list[0].lower() == "счет" and get_mask_account(data_list[-1]) != "":
+    elif len(data_list[-1]) == 20:
+        return str(" ".join(data_list[:-1]) + " " + get_mask_account(data_list[-1]))
+    else:
+        # print("Некорректные данные")
+        return ""
 
 
+def get_date(unfiltered_date: str) -> str:
+    """Data filtered function."""
 
-def get_mask(number: str) -> str:
-    """Функция получает строку и маскирует счет/карту"""
-    if len(number.split()[-1]) == 16:
-        new_number = get_mask_card(number.split()[-1])
-        result = f"{number[:-16]}{new_number}"
-        # return result
-    elif len(number.split()[-1]) == 20:
-        new_number = get_mask_account(number.split()[-1])
-        result = f"{number[:-20]}{new_number}"
-    return result
-
-
-
-if __name__ == '__main__':
-    print(get_mask_account('Счет 12345678901234567890'))
-    print(get_mask_account('Visa Classic 1234567890123456'))
-
-    # должно вывестись в терминал
-    # Счет **7890
-    # Visa Classic 1234 56** **** 3456
-
-
-def get_new_data(old_data: str) -> str:
-    """Функция принимает строку с датой и
-    выводит в формате dd.mm.yyyy"""
-
-    data_slize = old_data[0:10].split("-")
-    return ".".join(data_slize[::-1])
+    new_date: list = unfiltered_date[:10].split("-")
+    if not "".join(new_date).isdigit() or len(new_date) != 3:
+        print("Некорректный формат даты")
+        return ""
+    elif 1900 > int(new_date[0]) or int(new_date[0]) > 2024 or int(new_date[1]) > 12 or int(new_date[2]) > 31:
+        print("Некорректный формат даты")
+        return ""
+    else:
+        return ".".join(new_date[::-1])

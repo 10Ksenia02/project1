@@ -2,9 +2,9 @@ import os
 
 from src.generators import filter_by_currency
 from src.import_data import get_data_from_csv, get_data_from_excel
-from src.processing import filter_by_request, filter_by_state, sort_by_date
+from src.processing import filter_by_state, sort_by_date
 from src.utils import get_transactions_from_json
-from src.widget import get_date, mask_account_card
+from src.widget import get_new_data, get_mask_account
 
 PATH_TO_FILE_JSON = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "operations.json")
 PATH_TO_FILE_CSV = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "transactions.csv")
@@ -70,7 +70,7 @@ def main():
     filter_by_word = input("Программа: Отфильтровать список транзакций по определенному слову в описании? Да/Нет ")
     if filter_by_word.lower() == "да":
         word = input("Введите слово: ")
-        filtered_transactions = filter_by_request(filtered_transactions, word)
+        filtered_transactions = filter_by_state(filtered_transactions, word)
 
     print("Распечатываю итоговый список транзакций...")
     if len(filtered_transactions) == 0:
@@ -78,12 +78,12 @@ def main():
     else:
         print(f"Всего банковских операций в выборке: {len(filtered_transactions)}")
         for tr in filtered_transactions:
-            tr_date = get_date(tr["date"])
+            tr_date = get_new_data(tr["date"])
             currency = tr["operationAmount"]["currency"]["name"]
             if tr["description"] == "Открытие вклада":
-                from_to = mask_account_card(tr["to"])
+                from_to = get_mask_account(tr["to"])
             else:
-                from_to = mask_account_card(tr["from"]) + " -> " + mask_account_card(tr["to"])
+                from_to = get_mask_account(tr["from"]) + " -> " + get_mask_account(tr["to"])
 
             amount = tr["operationAmount"]["amount"]
             print(
