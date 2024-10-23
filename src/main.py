@@ -4,7 +4,7 @@ from src.generators import filter_by_currency
 from src.import_data import get_data_from_csv, get_data_from_excel
 from src.processing import filter_by_state, sort_by_date
 from src.utils import get_transactions_from_json
-from src.widget import get_new_data, get_mask_account
+from src.widget import get_date, get_mask_account
 
 PATH_TO_FILE_JSON = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "operations.json")
 PATH_TO_FILE_CSV = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "transactions.csv")
@@ -78,7 +78,7 @@ def main():
     else:
         print(f"Всего банковских операций в выборке: {len(filtered_transactions)}")
         for tr in filtered_transactions:
-            tr_date = get_new_data(tr["date"])
+            tr_date = get_date(tr["date"])
             currency = tr["operationAmount"]["currency"]["name"]
             if tr["description"] == "Открытие вклада":
                 from_to = get_mask_account(tr["to"])
