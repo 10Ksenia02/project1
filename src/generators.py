@@ -76,7 +76,7 @@ def filter_by_currency(transactions: list, currency: str) -> Generator:
     который выдает по очереди операции, в которых указана заданная валюта"""
     for transaction in transactions:
         if transaction["operationAmount"]["currency"]["code"] == currency:
-            yield transaction["id"]
+            yield transaction
 
 
 # usd_transactions = filter_by_currency(transactions, "USD")

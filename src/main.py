@@ -2,7 +2,7 @@ import os
 
 from src.generators import filter_by_currency
 from src.import_data import get_data_from_csv, get_data_from_excel
-from src.processing import filter_by_request, sort_by_date
+from src.processing import filter_by_request, sort_by_date,filter_by_state
 from src.utils import get_transactions_from_json
 from src.widget import get_date, get_mask_account
 
@@ -52,7 +52,7 @@ def main():
         else:
             break
 
-    filtered_transactions = filter_by_request(transactions, state)
+    filtered_transactions = filter_by_state(transactions, state)
 
     date_sort = input("Отсортировать операции по дате? Да/Нет. ").lower()
     if date_sort == "да":

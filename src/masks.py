@@ -8,7 +8,7 @@ def get_mask_card(card_number: str) -> str | None:
 
 def get_mask_account(acc_number: str) -> str | None:
     """Returns masked card number as string"""
-    if acc_number.isdigit() and len(acc_number) == 20:
-        return f"{"*" * 2}{acc_number[-4::]}"
-    else:
-        return None
+    # if acc_number.isdigit() and len(acc_number) == 20:
+    return f"{"*" * 2}{acc_number[-4::]}"
+    # else:
+    #     return None
